@@ -31,6 +31,8 @@ def composite(reference: np.ndarray, degraded: np.ndarray, sr:int, mp: bool = Fa
     except Exception as e:
         print("Error during composite computation:", e)
         raise e
+    if mp:
+        oc_local.exit()
     csig += 0.603 * pesq_score
     cbak += 0.478 * pesq_score
     covl += 0.805 * pesq_score
