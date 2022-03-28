@@ -1,4 +1,4 @@
-function [Csig,Cbak,Covl,segSNR]= composite(cleanFile, enhancedFile);
+function [Csig,Cbak,Covl,segSNR]= composite(reference, degraded, sampling_rate);
 
 % --------- composite objective measure ----------------------
 %
@@ -39,43 +39,33 @@ end
 
 alpha= 0.95;
 
-[data1, Srate1]= audioread(cleanFile);
-[data2, Srate2]= audioread(enhancedFile);
-info1 = audioinfo(cleanFile);
-info2 = audioinfo(enhancedFile);
-Nbits1 = info1.BitsPerSample;
-Nbits2 = info2.BitsPerSample;
-if ( Srate1~= Srate2) | ( Nbits1~= Nbits2)
-    error( 'The two files do not match!\n');
-end
-
-len= min( length( data1), length( data2));
-data1= data1( 1: len)+eps;
-data2= data2( 1: len)+eps;
+len= min( length( reference), length( degraded));
+reference= reference( 1: len)+eps;
+degraded= degraded( 1: len)+eps;
 
 
 % -- compute the WSS measure ---
 %
-wss_dist_vec= wss( data1, data2,Srate1);
+wss_dist_vec= wss( reference, degraded,sampling_rate);
 wss_dist_vec= sort( wss_dist_vec);
 wss_dist= mean( wss_dist_vec( 1: round( length( wss_dist_vec)*alpha)));
 
 % --- compute the LLR measure ---------
 %
-LLR_dist= llr( data1, data2,Srate1);
+LLR_dist= llr( reference, degraded,sampling_rate);
 LLRs= sort(LLR_dist);
 LLR_len= round( length(LLR_dist)* alpha);
 llr_mean= mean( LLRs( 1: LLR_len));
 
 % --- compute the SNRseg ----------------
 %
-[snr_dist, segsnr_dist]= snr( data1, data2,Srate1);
+[snr_dist, segsnr_dist]= snr( reference, degraded,sampling_rate);
 snr_mean= snr_dist;
 segSNR= mean( segsnr_dist);
 
 
 % -- compute the pesq ----
-%[pesq_mos]= pesq(Srate1,cleanFile, enhancedFile);
+%[pesq_mos]= pesq(sampling_rate,cleanFile, enhancedFile);
 pesq_mos = 0;
  
  
