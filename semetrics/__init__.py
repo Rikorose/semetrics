@@ -60,6 +60,8 @@ def composite(reference: np.ndarray, degraded: np.ndarray, sr: int, mp: bool = F
     assert reference.ndim == 1
     assert degraded.ndim == 1
     assert sr in (8000, 16000)
+    reference = reference.astype(np.double)
+    degraded = degraded.astype(np.double)
     pesq_score = pesq_mos(reference, degraded, sr)
     reference = reference.reshape(-1, 1)
     degraded = degraded.reshape(-1, 1)
