@@ -18,9 +18,13 @@ def pesq_mos(clean: str, enhanced: str):
     return pesq(sr1, clean_wav, enhanced_wav, mode)
 
 
-def composite(clean: str, enhanced: str):
+def composite(clean: str, enhanced: str, mp: bool = False):
     pesq_score = pesq_mos(clean, enhanced)
-    csig, cbak, covl, ssnr = oc.feval(COMPOSITE, clean, enhanced, nout=4)
+    if mp:
+        oc_local = oct2py.Oct2Py(logger=logging.getLogger())
+    else:
+        oc_local = oc
+    csig, cbak, covl, ssnr = oc_local.feval(COMPOSITE, clean, enhanced, nout=4)
     csig += 0.603 * pesq_score
     cbak += 0.478 * pesq_score
     covl += 0.805 * pesq_score
