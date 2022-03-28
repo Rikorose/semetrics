@@ -10,12 +10,53 @@ oc = oct2py.Oct2Py(logger=logging.getLogger())
 COMPOSITE = os.path.join(os.path.abspath(os.path.dirname(__file__)), "composite.m")
 
 
-def pesq_mos(reference: np.ndarray, degraded: np.ndarray, sr:int):
+def pesq_mos(reference: np.ndarray, degraded: np.ndarray, sr: int):
+    """Computes PESQ [1] score using the `pesq` python package.
+
+    Args:
+        reference (np.ndarray): 1-D numpy array containing a reference audio signal.
+        degraded (np.ndarray): 1-D numpy array containing a degraded audio signal.
+        sr (int): Sampling rate of both input signal.
+
+    Returns:
+        float: PESQ score
+
+
+    References:
+        [1] Rix, A.W., Beerends, J.G., Hollier, M.P. and Hekstra, A.P., 2001, May. Perceptual
+            evaluation of speech quality (PESQ)-a new method for speech quality assessment of
+            telephone networks and codecs. ICASSP 2001.
+    """
+    assert reference.ndim == 1
+    assert degraded.ndim == 1
+    assert sr in (8000, 16000)
     mode = "nb" if sr < 16000 else "wb"
     return pesq(sr, reference, degraded, mode)
 
 
-def composite(reference: np.ndarray, degraded: np.ndarray, sr:int, mp: bool = False):
+def composite(reference: np.ndarray, degraded: np.ndarray, sr: int, mp: bool = False):
+    """Comptes composite metrics [1] using octave cli.
+
+    Args:
+        reference (np.ndarray): 1-D numpy array containing a reference audio signal.
+        degraded (np.ndarray): 1-D numpy array containing a degraded audio signal.
+        sr (int): Sampling rate of both input signal.
+        mp (bool): Support multi-processing by instanciating new a octave-cli for each call.
+
+    Returns:
+        float: PESQ score [2]
+        float: CSIG (Composite Signal MOS)
+        float: CBAK (Composite Background MOS)
+        float: COVL (Composite Overall MOS)
+        float: SSNR (Semental signal to noise ratio)
+
+    References:
+        [1] Hu, Y. and Loizou, P. (2006). �Evaluation of objective measures for speech enhancement,
+            Proceedings of INTERSPEECH-2006, Philadelphia, PA, September 2006.
+        [2] Rix, A.W., Beerends, J.G., Hollier, M.P. and Hekstra, A.P., 2001, May. Perceptual
+            evaluation of speech quality (PESQ)-a new method for speech quality assessment of
+            telephone networks and codecs. ICASSP 2001.
+    """
     assert reference.ndim == 1
     assert degraded.ndim == 1
     assert sr in (8000, 16000)

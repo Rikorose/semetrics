@@ -22,9 +22,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/usimarit/semetrics",
     packages=setuptools.find_packages(include=["semetrics*"]),
-    package_data={
-        "semetrics": ["*.m"]
-    },
+    package_data={"semetrics": ["*.m"]},
     install_requires=requirements,
     classifiers=[
         "Programming Language :: Python :: 3.6",
@@ -32,7 +30,7 @@ setuptools.setup(
         "Intended Audience :: Science/Research",
         "Operating System :: POSIX :: Linux",
         "License :: OSI Approved :: Apache-2.0 License",
-        "Topic :: Software Development :: Libraries :: Python Modules"
+        "Topic :: Software Development :: Libraries :: Python Modules",
     ],
-    python_requires='>=3.6',
+    python_requires=">=3.6",
 )
